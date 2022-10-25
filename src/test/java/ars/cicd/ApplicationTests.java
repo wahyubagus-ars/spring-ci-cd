@@ -1,13 +1,47 @@
 package ars.cicd;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@SpringBootTest
-class ApplicationTests {
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-	@Test
-	void contextLoads() {
-	}
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class)
+@EnableWebMvc
+@ActiveProfiles("test-disable-kafka")
+@AutoConfigureMockMvc
+public class ApplicationTests {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @Before
+    public void setup() {
+        //Init MockMvc Object and build
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
+    @Test
+    public void getSofAccountVisibilityTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/message")
+                        .characterEncoding("utf-8")
+                        .content("{}"))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
 
 }
