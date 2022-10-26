@@ -64,6 +64,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>spring-ci-cd</finalName>
 	</build>
 
 </project>
